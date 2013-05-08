@@ -22,7 +22,7 @@
 	</div>
 	<script>
 	// Loading Components
-	var assetsToLoader = [ "Shield.png", "GameMenu.json", "Jets.json", "Items.json" ,"Levels.json", "Weapons.json", "LaserBeam.json", "Explosions.json", "Shop.json", "SoundOn.png", "SoundOff.png", "Pause.png", "_ExitBtn.png", "GameOver.png"];
+	var assetsToLoader = [ "textures/Shield.png", "textures/GameMenu.json", "textures/Jets.json", "textures/Items.json" ,"textures/Levels.json", "textures/Weapons.json", "textures/LaserBeam.json", "textures/Explosions.json", "textures/Shop.json", "textures/SoundOn.png", "textures/SoundOff.png", "textures/Pause.png", "textures/_ExitBtn.png", "textures/GameOver.png"];
 	
 	loader = new PIXI.AssetLoader(assetsToLoader);
 	
@@ -92,6 +92,15 @@
 	bgm.loop = true;
 
 
+	//Storing Key Codes in an array
+	var keys = [];
+	document.body.addEventListener("keydown", function (e) {
+		keys[e.keyCode] = true;
+	});
+	document.body.addEventListener("keyup", function (e) {
+		keys[e.keyCode] = false;
+	});
+	
 	
 	// add the renderer view element to the DOM
 	document.body.appendChild(renderer.view);
@@ -143,7 +152,7 @@
 	//GameOver Initialization
 	function initGameOver()
 	{
-		gameOverBG = PIXI.Sprite.fromFrame("GameOver.png");
+		gameOverBG = PIXI.Sprite.fromFrame("textures/GameOver.png");
 		gameOverBG.setInteractive(true);	
 		stage.addChild(gameOverBG);
 	}
@@ -279,7 +288,7 @@
 				var rect = renderer.view.getBoundingClientRect();
 				var newY = event.screenY - 4*rect.top;
 				var newX = event.screenX - rect.left;
-				if(between(newY, renderer.height,0) && between(newX, renderer.width, 0)){
+				if(between(newY, renderer.height,0) && between(newX, renderer.width, 0)&& !Pause){
 					jet.position.y = newY;
 					jet.position.x = newX;
 				}
@@ -396,34 +405,36 @@
 		else if(gameMode == GAME_MODE.PLAYING)
 		{
 			gameSettings();
-			BGI.position.y += 10;
-			BGI2.position.y += 10;
-			if ( BGI.position.y > renderer.height )
-			{
-				BGI.position.y = (renderer.height*-1)+10;
-			}
-			if ( BGI2.position.y > renderer.height )
-			{
-				BGI2.position.y = (renderer.height*-1)+10;
-			}
-			if(playerBullets.length > 0) updatePlayerBullets();
-			if(enemyBullets.length > 0) updateEnemyBullets();
-			if(enemies.length < Math.floor(currLevel * 2 + 2) && score < winScore - enemies.length) createEnemy();
-			if(enemies.length > 0) updateEnemies();
-			if(coins.length > 0) updateCoins();
-			if(items.length > 0) updateItems();
-			if(activeRockets.length > 0) {
-				updateRockets();
-			}
-			if(lives.length == 0){
-				gameMode = GAME_MODE.GAMEOVER;
-				initGameOver();
-			}
+			if(!Pause){
+				BGI.position.y += 10;
+				BGI2.position.y += 10;
+				if ( BGI.position.y > renderer.height )
+				{
+					BGI.position.y = (renderer.height*-1)+10;
+				}
+				if ( BGI2.position.y > renderer.height )
+				{
+					BGI2.position.y = (renderer.height*-1)+10;
+				}
+				if(playerBullets.length > 0) updatePlayerBullets();
+				if(enemyBullets.length > 0) updateEnemyBullets();
+				if(enemies.length < Math.floor(currLevel * 2 + 2) && score < winScore - enemies.length) createEnemy();
+				if(enemies.length > 0) updateEnemies();
+				if(coins.length > 0) updateCoins();
+				if(items.length > 0) updateItems();
+				if(activeRockets.length > 0) {
+					updateRockets();
+				}
+				if(lives.length == 0){
+					gameMode = GAME_MODE.GAMEOVER;
+					initGameOver();
+				}
 
-			else if(score >= winScore){
-				gameMode = GAME_MODE.SHOP;
-				eraseLevel();
-				initShop();
+				else if(score >= winScore){
+					gameMode = GAME_MODE.SHOP;
+					eraseLevel();
+					initShop();
+				}
 			}
 		}
 
@@ -792,12 +803,12 @@
 
 	function InitButtons ()
 	{
-		SoundBtnOn = new PIXI.Texture.fromFrame("SoundOn.png");
-		SoundBtnOff = new PIXI.Texture.fromFrame("SoundOff.png");
+		SoundBtnOn = new PIXI.Texture.fromFrame("textures/SoundOn.png");
+		SoundBtnOff = new PIXI.Texture.fromFrame("textures/SoundOff.png");
 		SoundBtn = new PIXI.Sprite(SoundBtnOn);
 
-		var PauseBtnTex = new PIXI.Texture.fromFrame("Pause.png");
-		var ExitBtnTex = new PIXI.Texture.fromFrame("_ExitBtn.png");;
+		var PauseBtnTex = new PIXI.Texture.fromFrame("textures/Pause.png");
+		var ExitBtnTex = new PIXI.Texture.fromFrame("textures/_ExitBtn.png");;
 		PauseBtn = new PIXI.Sprite(PauseBtnTex);
 		ExitBtn = new PIXI.Sprite(ExitBtnTex);
 
@@ -821,7 +832,8 @@
 		stage.addChild(SoundBtn);
 
 		// set the mousedown and touchstart callback..
-		ExitBtn.mousedown = function(data){
+		if (keys[81]) //Press Q
+		{
 			this.alpha = 1;
 			GameMode = 0;
 
@@ -832,17 +844,19 @@
 		}
 
 		// set the mousedown and touchstart callback..
-		SoundBtn.mousedown = function(data){
+		else if (keys[87]) //Press W
+		{
 			//Mute Sound and Change Button Texture
-			if(!Mute){this.setTexture(SoundOff);Mute = true;bgm.pause();}else{this.setTexture(SoundOn);Mute = false;bgm.play();}
+			if(!Mute){Mute = true;bgm.pause();this.setTexture(SoundBtnOff);}else{Mute = false;bgm.play();this.setTexture(SoundBtnOn);;}
 			this.alpha = 1;
 		}
 
 		// set the mousedown and touchstart callback..
-		PauseBtn.mousedown = function(data){
+		else if (keys[69]) //Press E
+		{
 			this.alpha = 1;
 			// Pause Game
-			Pause = true;
+			Pause = !Pause;
 		}
 	}
 	//-------------------------------------------------------
