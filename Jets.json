@@ -1,0 +1,44 @@
+{"frames": {
+
+"EnemyLevel1.png":
+{
+	"frame": {"x":166,"y":2,"w":80,"h":100},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":80,"h":100},
+	"sourceSize": {"w":80,"h":100}
+},
+"EnemyLevel2.png":
+{
+	"frame": {"x":84,"y":2,"w":80,"h":100},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":80,"h":100},
+	"sourceSize": {"w":80,"h":100}
+},
+"PlayerLevel1.png":
+{
+	"frame": {"x":2,"y":104,"w":80,"h":100},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":80,"h":100},
+	"sourceSize": {"w":80,"h":100}
+},
+"Soviet.png":
+{
+	"frame": {"x":2,"y":2,"w":80,"h":100},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":80,"h":100},
+	"sourceSize": {"w":80,"h":100}
+}},
+"meta": {
+	"app": "http://www.texturepacker.com",
+	"version": "1.0",
+	"image": "Jets.png",
+	"format": "RGBA8888",
+	"size": {"w":256,"h":256},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:ca804294cbaebf55593c8e89652ab745$"
+}
+}

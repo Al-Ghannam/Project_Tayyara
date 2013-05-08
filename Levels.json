@@ -1,0 +1,44 @@
+{"frames": {
+
+"Level21.png":
+{
+	"frame": {"x":2,"y":594,"w":634,"h":590},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":634,"h":590},
+	"sourceSize": {"w":634,"h":590}
+},
+"Level22.png":
+{
+	"frame": {"x":1274,"y":2,"w":634,"h":590},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":634,"h":590},
+	"sourceSize": {"w":634,"h":590}
+},
+"Level11.png":
+{
+	"frame": {"x":638,"y":2,"w":634,"h":590},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":634,"h":590},
+	"sourceSize": {"w":634,"h":590}
+},
+"Level12.png":
+{
+	"frame": {"x":2,"y":2,"w":634,"h":590},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":634,"h":590},
+	"sourceSize": {"w":634,"h":590}
+}},
+"meta": {
+	"app": "http://www.texturepacker.com",
+	"version": "1.0",
+	"image": "Levels.png",
+	"format": "RGBA8888",
+	"size": {"w":2048,"h":2048},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:a87db6b7d48a7b9e0e8ca775f6c56ad6$"
+}
+}

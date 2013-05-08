@@ -1,0 +1,899 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<html lang="en">
+	<meta charset="utf-8">
+	<title>Project Tayyara</title>
+	<meta name="description"content="A Tank Shooter Game">
+	<meta name="author" content="Assem & Ghannam">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<script src="pixi.js"></script>
+	<script src="../../src/pixi/renderers/WebGLRenderer.js"></script>
+	<link type="text/css" rel= "stylesheet" href="style.css" />
+</head>
+<body>
+	<audio id="BGM" src="sounds/world.ogg" type="audio/ogg"  preload="auto" autoplay loop > NO Audio Support</audio>
+	<audio id="Explosion" src="sounds/Explosion.wav" type="audio/wav" preload="auto" >NO Audio Support</audio>
+	<audio id="Laser"  src="sounds/Laser.wav" type="audio/wav" preload="auto">NO Audio Support</audio>
+
+	<div id="score">Score:0  </div>
+	<div id="loader" >
+		<img id="loaderText" src="Loading/loading0.png">
+	</div>
+	<script>
+	// Loading Components
+	var assetsToLoader = [ "Shield.png", "GameMenu.json", "Jets.json", "Items.json" ,"Levels.json", "Weapons.json", "LaserBeam.json", "Explosions.json", "Shop.json", "SoundOn.png", "SoundOff.png", "Pause.png", "_ExitBtn.png", "GameOver.png"];
+	
+	loader = new PIXI.AssetLoader(assetsToLoader);
+	
+	loader.onProgress = Loading
+	loader.onComplete =  startGame
+
+	loader.load();
+	
+	var loaderView = document.getElementById("loader");
+	var loaderText = document.getElementById("loaderText"); 
+	
+	var loadCount = 0;
+	
+	//Game modes Enumerator
+	var GAME_MODE = {MENU:0,PLAYING:1,SHOP:2, GAMEOVER:3};
+	var gameMode = 0;
+	
+	//Menu Variables
+	var MenuBG,gameOverBG;
+	var PlayBtnOn;
+	var PlayBtnOff;
+	var PlayBtn;
+	var shopBG,buyButton1,buyButton2,startButton;
+	
+
+	
+	var BGI,BGI2,jet,shield,bulletT,bulletEnemy,coinTexture,enemyJet,currLevel = 1,MAX_LEVEL = 2;
+	var score = 0, MIN_SCORE = 75, winScore = MIN_SCORE;
+ 	var scoreHolder = document.getElementById('score');
+ 	stage = new PIXI.Stage(0x000000, true);
+		
+	// create a renderer instance
+	renderer = PIXI.autoDetectRenderer(634, 590);
+ 	var playerItem = -1;
+ 	var hasShield = false, shieldHits = 0, Max_Shield_Hits = 10;
+	var enemies = new Array();
+	var playerBullets = new Array();
+	var enemyBullets = new Array();
+	var coins = new Array();
+	var items = new Array();
+	var lives = new Array();
+	var activeRockets = new Array();
+	var rocketOriginalPos = new Array();
+	var rocketSprites = new Array();
+	var rocketNumberHolder;
+	var explosionTextures = new Array();
+	var rocketCount = 0;
+	var laser,hasLaser = false;
+
+	var gameSound;
+	var shootSound;
+
+	//Loading SOUNDS
+	//Sound Effects
+	var ExplSnd = document.getElementById("Explosion");
+	var LaserSnd = document.getElementById("Laser");
+
+	shootSound = document.createElement('audio');
+	document.body.appendChild(shootSound);
+	shootSound.setAttribute('src','sounds/shoot.ogg');
+
+	//Back Ground Music
+	var bgm = document.getElementById('BGM');
+	bgm.play();
+    //bgm.pause();
+	bgm.volume =0.5;
+	bgm.loop = true;
+
+
+	
+	// add the renderer view element to the DOM
+	document.body.appendChild(renderer.view);
+			//------------Menu Initialization---------------
+	function initMenu ()
+	{
+		MenuBG = PIXI.Sprite.fromFrame("MenuBG.png");
+		PlayBtnOff = PIXI.Texture.fromFrame("PlayBtn.png");
+		PlayBtnOn = PIXI.Texture.fromFrame("PlayBtnGlow.png");
+		PlayBtn  = new PIXI.Sprite(PlayBtnOff);
+		PlayBtn.anchor.x = 0.5;
+		PlayBtn.anchor.y = 0.5;
+		
+		PlayBtn.position.x = renderer.width / 2;
+		PlayBtn.position.y = renderer.height / 1.5;
+		PlayBtn.setInteractive(true);
+	}
+	//-------------------------------------------------------
+	//Shop Initialization
+	function initShop ()
+	{
+		shopBG = PIXI.Sprite.fromFrame("MainShop.png");
+		startButton = PIXI.Sprite.fromFrame("StartBtn.png");
+		buyButton1 = PIXI.Sprite.fromFrame("BuyBtn.png");
+		buyButton2 = PIXI.Sprite.fromFrame("BuyBtn.png");
+
+		buyButton1.anchor.x = 0.5;
+		buyButton1.anchor.y = 0.5;
+		buyButton2.anchor.x = 0.5;
+		buyButton2.anchor.y = 0.5;
+		startButton.anchor.x = 0.5;
+		startButton.anchor.y = 0.5;
+
+		buyButton1.position.y = renderer.height - 2.5*startButton.height;
+		buyButton1.position.x = renderer.width/4;
+		buyButton2.position.y = renderer.height - 2.5*startButton.height;
+		buyButton2.position.x = renderer.width - renderer.width/4;
+		startButton.position.x = renderer.width/2;
+		startButton.position.y = renderer.height - startButton.height;
+
+		startButton.setInteractive(true);
+		
+		stage.addChild(shopBG);
+		stage.addChild(buyButton1);
+		stage.addChild(buyButton2);
+		stage.addChild(startButton);
+	}
+	//-------------------------------------------------------
+	//GameOver Initialization
+	function initGameOver()
+	{
+		gameOverBG = PIXI.Sprite.fromFrame("GameOver.png");
+		gameOverBG.setInteractive(true);	
+		stage.addChild(gameOverBG);
+	}
+	//-------------------------------------------------------
+	//Animate while Loading Assets
+	function Loading ()
+	{
+	}
+	//-------------------------------------------------------
+	//Item types
+	var itemTextures = new Array();
+	function loadItems(){
+		itemTextures = [];
+		var itemTexture = PIXI.Texture.fromFrame("iRocket.png");
+		itemTextures.push(itemTexture);
+		itemTexture = PIXI.Texture.fromFrame("iShield.png");
+		itemTextures.push(itemTexture);
+		itemTexture = PIXI.Texture.fromFrame("bulletJet3.png");
+		itemTextures.push(itemTexture);
+	}
+	//-------------------------------------------------------
+	function Item(){
+		this.id = Math.floor(Math.random() * (itemTextures.length));
+		if(this.id == 3) alert("WTF ?!");
+		this.item = new PIXI.Sprite(itemTextures[this.id]);
+		this.item.scale.x = .5;
+		this.item.scale.y = .5;
+	}
+	//-------------------------------------------------------
+	function loadResources() {
+
+		bulletT = PIXI.Texture.fromFrame("bulletJet.png");
+		bulletEnemy = PIXI.Texture.fromFrame("bulletEnemy2.png");
+		coinTexture = PIXI.Texture.fromFrame("Coin.png");
+		var shieldT = PIXI.Texture.fromImage("Shield.png");
+		shield = new PIXI.Sprite(shieldT);
+
+		for (var i=0; i < 26; i++)
+		{
+			var texture = PIXI.Texture.fromFrame("Explosion_Sequence_A " + (i+1) + ".png");
+			explosionTextures.push(texture);
+		};
+
+		var LaserTextures = [];
+		for (var i=-1; i < 31; i++)
+		{
+			var texture = PIXI.Texture.fromFrame("Laser" + (i+1) + ".png");
+			LaserTextures.push(texture);
+		}
+		laser = new PIXI.MovieClip(LaserTextures);
+
+	
+	}
+	//-------------------------------------------------------
+	function startGame(){
+
+		//clearInterval(loadInterval);
+		if(currLevel == 1){
+			loaderView.style.display = "none";
+			loadResources();
+			loadItems();
+		}
+		else{
+			eraseLevel();
+		}
+		switch(gameMode){
+			case GAME_MODE.MENU:
+				initMenu();
+				break;
+			case GAME_MODE.SHOP:
+				initShop();
+				break;
+			case GAME_MODE.GAMEOVER:
+				initGameOver();
+				break;
+		}
+		requestAnimFrame(gameLoop);
+	}	
+	//-------------------------------------------------------
+	function startLevel(){
+		enemies = [];
+		coin = [];
+		activeRockets = [];
+		rocketOriginalPos = [];
+		// create an new instance of a pixi stage
+		
+
+		var jetT = PIXI.Texture.fromFrame("PlayerLevel1.png");
+		var BGIT = PIXI.Texture.fromFrame("Level" + currLevel + "1.png");
+		var BGI2T = PIXI.Texture.fromFrame("Level" + currLevel + "2.png");
+		enemyJet = PIXI.Texture.fromFrame("EnemyLevel" + currLevel + ".png");
+		winScore = (currLevel-1) * 20 + MIN_SCORE;
+		// create the Sprites using the textures
+		jet = new PIXI.Sprite(jetT);
+		BGI = new PIXI.Sprite(BGIT);
+		BGI2 = new PIXI.Sprite(BGI2T);
+
+		// center the sprites anchor point
+		jet.anchor.x = 0.5;
+		jet.anchor.y = 0.5;
+		shield.anchor.x = 0.5;
+		shield.anchor.y = 0.5;
+
+		// Position the sprites
+		jet.position.x = 250;
+		jet.position.y = 500;
+		BGI2.position.x = 0;
+		BGI2.position.y = -1*renderer.height;
+		stage.addChild(BGI);
+		stage.addChild(BGI2);
+
+		for(var i=0; i<3; i++){
+			lives.push(new PIXI.Sprite(jetT));
+			lives[i].scale.x = 0.5;
+			lives[i].scale.y = 0.5;
+			lives[i].position.x = renderer.width - (0.5 * jetT.width * (i+1));
+			lives[i].position.y = renderer.height - (0.5 * jetT.height);
+			stage.addChild(lives[i]);
+		}
+
+		var rocketTexture = PIXI.Texture.fromFrame("Missile.png");
+		rocketNumberHolder = new PIXI.Sprite(rocketTexture);
+		rocketNumberHolder.position.y = renderer.height - (rocketTexture.height)
+		rocketNumberHolder.position.x = 0.5 * rocketTexture.width;
+
+		stage.addChild(rocketNumberHolder);
+		stage.addChild(jet);
+
+		InitButtons();
+		//User input:
+		if(gameMode == GAME_MODE.PLAYING){
+			window.addEventListener('mousemove', function(event) {
+				var rect = renderer.view.getBoundingClientRect();
+				var newY = event.screenY - 4*rect.top;
+				var newX = event.screenX - rect.left;
+				if(between(newY, renderer.height,0) && between(newX, renderer.width, 0)){
+					jet.position.y = newY;
+					jet.position.x = newX;
+				}
+				if(hasShield){
+					if(shieldHits < Max_Shield_Hits){
+						shield.position.y = jet.position.y;
+						shield.position.x = jet.position.x;
+					}
+					else{
+						hasShield = false;
+						stage.removeChild(shield);
+						shieldHits = 0;
+					}
+				}
+				if(hasLaser){
+						laser.position.x = jet.position.x;
+						laser.position.y = (jet.position.y - 0.5*jet.height) - 0.5*laser.height;
+					}
+			},true);
+			var intervalId;
+			window.addEventListener('mousedown', function(event) {
+				if(event.button == 0){
+					if(hasLaser){
+						laserOn();
+					}
+					else{
+						clearInterval(intervalId);
+						intervalId = setInterval(playerFire, 100);
+					}
+				}
+			},false);
+			window.addEventListener('mouseup', function(event) {
+				if(hasLaser){
+					laserOff();
+				}
+				else
+					clearInterval(intervalId);
+			}, false);
+			window.addEventListener('keydown', function(event){
+				if(event.keyCode == 32 && rocketCount > 0){
+					rocketFire();
+				}
+			},false);
+		}
+
+		}
+	//-------------------------------------------------------
+	function eraseLevel(){
+		for(var i=0; i<playerBullets.length; i++){
+			stage.removeChild(playerBullets[i]);
+		}
+		playerBullets = [];
+		for(var i=0; i<enemyBullets.length; i++){
+			stage.removeChild(enemyBullets[i]);
+		}
+		enemyBullets = [];
+		for(var i=0; i<lives.length; i++){
+			stage.removeChild(lives[i]);
+		}
+		lives = [];
+		stage.removeChild(rocketNumberHolder);
+		stage.removeChild(jet);
+		stage.removeChild(BGI);
+		stage.removeChild(BGI2);
+	}
+	//-------------------------------------------------------
+	function gameLoop(){
+		window.setTimeout("tick()", 1000);
+		setTimeout(game,1000/60);
+		requestAnimFrame(gameLoop);
+		renderer.render(stage);
+	}
+	//-------------------------------------------------------
+	function game(){
+
+		if(gameMode == GAME_MODE.MENU)
+		{
+
+			stage.addChild(MenuBG);
+			stage.addChild(PlayBtn);
+
+			// set the mousedown and touchstart callback..
+			PlayBtn.mousedown = function(data){
+			
+				this.isdown = true;
+				this.setTexture(PlayBtnOn);
+				this.alpha = 1;
+				gameMode = 1;
+				stage.removeChild(MenuBG);
+				stage.removeChild(PlayBtn);
+				startLevel();
+			}
+			
+			// set the mouseover callback..
+			PlayBtn.mouseover = function(data){
+				this.setTexture(PlayBtnOn);
+			}
+			
+			// set the mouseout callback..
+			PlayBtn.mouseout = function(data){
+			
+				this.setTexture(PlayBtnOff)
+			}
+		
+			// set the mouseup and touchend callback..
+			PlayBtn.mouseup = PlayBtn.touchend = function(data){
+			//this.isdown = false;
+
+				this.setTexture(PlayBtnOff);
+			
+			}
+		}
+
+		else if(gameMode == GAME_MODE.PLAYING)
+		{
+			gameSettings();
+			BGI.position.y += 10;
+			BGI2.position.y += 10;
+			if ( BGI.position.y > renderer.height )
+			{
+				BGI.position.y = (renderer.height*-1)+10;
+			}
+			if ( BGI2.position.y > renderer.height )
+			{
+				BGI2.position.y = (renderer.height*-1)+10;
+			}
+			if(playerBullets.length > 0) updatePlayerBullets();
+			if(enemyBullets.length > 0) updateEnemyBullets();
+			if(enemies.length < Math.floor(currLevel * 2 + 2) && score < winScore - enemies.length) createEnemy();
+			if(enemies.length > 0) updateEnemies();
+			if(coins.length > 0) updateCoins();
+			if(items.length > 0) updateItems();
+			if(activeRockets.length > 0) {
+				updateRockets();
+			}
+			if(lives.length == 0){
+				gameMode = GAME_MODE.GAMEOVER;
+				initGameOver();
+			}
+
+			else if(score >= winScore){
+				gameMode = GAME_MODE.SHOP;
+				eraseLevel();
+				initShop();
+			}
+		}
+
+		else if(gameMode == GAME_MODE.SHOP){
+			stage.addChild(shopBG);
+			stage.addChild(buyButton1);
+			stage.addChild(buyButton2);
+			stage.addChild(startButton);
+
+			startButton.mousedown = function(data){
+				if(currLevel < MAX_LEVEL){
+					gameMode = GAME_MODE.PLAYING;
+					currLevel += 1;
+					score = 0;
+					startLevel();
+				}
+				else{
+					alert("You are already done with two levels?! Take it easy champ, I can only code so fast.")
+				}
+				stage.removeChild(shopBG);
+				stage.removeChild(buyButton1);
+				stage.removeChild(buyButton2);
+				stage.removeChild(startButton);
+			}
+		}
+
+		else if(gameMode == GAME_MODE.GAMEOVER){
+			gameOverBG.mousedown = function(data){
+				this.alpha = 1;
+				currLevel = 1;
+				gameMode = GAME_MODE.MENU;
+				stage.removeChild(gameOverBG);
+				eraseLevel();
+			}
+		}
+	}
+	//-------------------------------------------------------
+	function createEnemy(){
+		var enemy = new PIXI.Sprite(enemyJet);
+		enemy.anchor.x = 0.5;
+		enemy.anchor.y = 0.5;
+		enemy.position.x = Math.random() * (renderer.width - 30) + 30;
+		enemy.position.y = Math.random() * (-0.5*enemy.height) - enemy.height;
+		
+		stage.addChild(enemy);
+		enemies.push(enemy);
+	}
+	//-------------------------------------------------------
+	function respawnJet(){
+		stage.removeChild(lives[lives.length - 1]);
+		lives.splice(lives.length - 1,1);
+		//Do explosion.
+		//Assem, do explosion.
+		//Dude, the explosion. Aaaargh!!
+		if(lives.length > 0) addShield(0.5*Max_Shield_Hits);
+	}
+	//-------------------------------------------------------
+	function checkCollision(objectA,objectB){
+		//Sides of objectA:
+		var rightA = objectA.position.x + 0.5*objectA.width;
+		var leftA  = objectA.position.x - 0.5*objectA.width;
+		var topA   = objectA.position.y - 0.5*objectA.height;
+		var bottomA = objectA.position.y + 0.5*objectA.height;
+		//Sides of objectB:
+		var rightB = objectB.position.x + 0.5*objectB.width;
+		var leftB  = objectB.position.x - 0.5*objectB.width;
+		var topB   = objectB.position.y - 0.5*objectB.height;
+		var bottomB = objectB.position.y + 0.5*objectB.height;
+		
+		//Basic idea: check if a side in one object is between two sides in the other object.
+		if(((between(rightA,rightB,leftB) || between(leftA,rightB,leftB)) &&
+			(between(topA,topB,bottomB) || between(bottomA,topB,bottomB)))||
+			((between(rightB,rightA,leftA) || between(leftB,rightA,leftA)) &&
+			(between(topB,topA,bottomA) || between(bottomB,topA,bottomA))))
+				return true;
+		else
+			return false;
+	}
+	//-------------------------------------------------------
+	function playerFire(){
+		switch(playerItem){
+			case -1:
+				bulletFire();
+				break;
+			case 0:
+				rocketCount++;
+				playerItem = -1;
+				break;
+			case 1:
+				playerItem = !hasLaser? -1 : 2;
+				if(!hasShield)	addShield(0);
+				break;
+		}
+	}
+	//-------------------------------------------------------
+	function addShield(hits){
+		shield.position = jet.position;
+		stage.addChild(shield);
+		hasShield = true;
+		shieldHits = hits;
+	}
+	//-------------------------------------------------------
+	function bulletFire(){
+		var bullet = new PIXI.Sprite(bulletT);
+		bullet.anchor.x = 0.5;
+		bullet.anchor.y = 0.5;
+		bullet.position.x = jet.position.x;
+		bullet.position.y = jet.position.y - jet.height*0.5;
+		stage.addChild(bullet);
+		playerBullets.push(bullet);
+		if(!Mute) shootSound.play();
+	}
+	//-------------------------------------------------------
+	function rocketFire(){
+		var rocketTexture = PIXI.Texture.fromFrame("Missile.png");
+		var rocket = new PIXI.Sprite(rocketTexture);
+		rocket.anchor.x = 0.5;
+		rocket.anchor.y = 0.5;
+		rocket.position.x = jet.position.x;
+		rocket.position.y = jet.position.y - jet.height*0.5;
+		stage.addChild(rocket);
+		activeRockets.push(rocket);
+		rocketOriginalPos.push(rocket.position.y);
+		rocketCount--;
+	}
+	//-------------------------------------------------------
+	function laserOn()
+	{
+		laser.position.x = jet.position.x;
+		laser.position.y = jet.position.y - 325;
+		laser.anchor.x = jet.anchor.x;
+		laser.anchor.y = jet.anchor.y;
+		laser.play();
+		stage.addChild(laser);
+		if(!Mute){
+			LaserSnd.play();
+			LaserSnd.volume = 0.5;
+			LaserSnd.loop = true;
+		}
+	}
+	//-------------------------------------------------------
+	function laserOff ()
+	{
+		laser.stop();
+		stage.removeChild(laser);
+		LaserSnd.pause();
+	}
+	//-------------------------------------------------------
+	function enemyFire(enemy){
+		var enemyBullet = new PIXI.Sprite(bulletEnemy);
+		enemyBullet.anchor.x = 0.5;
+		enemyBullet.anchor.y = 0.5;
+		enemyBullet.position.x = enemy.position.x;
+		enemyBullet.position.y = enemy.position.y + enemy.height*0.5;
+		stage.addChild(enemyBullet);
+		enemyBullets.push(enemyBullet);
+	}
+	//-------------------------------------------------------
+	//iterate over playerBullets checking for collision and bounds.
+	function updatePlayerBullets(){
+		for(var i=0; i<playerBullets.length;i++){
+			playerBullets[i].position.y -= 10;
+			//Check for out of bounds
+			if(!between(playerBullets[i].position.y,renderer.height,0)){
+				stage.removeChild(playerBullets[i]);
+				playerBullets.splice(i,1);
+			}
+		}
+	}
+	//-------------------------------------------------------
+	function updateEnemyBullets(){
+		for(var i=0; i<enemyBullets.length;i++){
+		//alert(i);
+			enemyBullets[i].position.y += 10;
+			//Check for collision
+			if(checkCollision(enemyBullets[i],jet)){
+				stage.removeChild(enemyBullets[i]);
+				if(!hasShield) {
+					startExplode(jet);
+					respawnJet();
+				}
+				else shieldHits++;
+				enemyBullets.splice(i,1);
+			}
+			//Check for out of bounds
+			else if(!between(enemyBullets[i].position.y,renderer.height,0)){
+				stage.removeChild(enemyBullets[i]);
+				enemyBullets.splice(i,1);
+			}
+		}
+	}
+	//-------------------------------------------------------
+	function updateEnemies(){
+		for(var i=0;i<enemies.length;i++){
+			var deleteEnemy = false;
+			if(enemies[i].position.y - 0.5*enemies[i].width < renderer.height){
+				if(checkCollision(jet,enemies[i])){
+					if(!hasShield) {
+						startExplode(jet);
+						respawnJet();
+					}
+					else shieldHits++;
+					deleteEnemy = true;
+
+				}
+				//Check for collision
+				if(hasLaser){
+					if(checkCollision(laser,enemies[i]) && enemies[i].position.y - 0.5*enemies[i].height >= 0){
+							deleteEnemy = true;
+						}
+				}
+				for(var j=0; j<playerBullets.length; j++){
+					if(checkCollision(playerBullets[j],enemies[i]) && enemies[i].position.y - 0.5*enemies[i].height >= 0){
+						stage.removeChild(playerBullets[j]);
+						playerBullets.splice(j,1);
+						deleteEnemy = true;
+					}
+				}
+			}
+			else {
+				stage.removeChild(enemies[i]);
+				enemies.splice(i,1);
+			}
+			if(deleteEnemy){
+				killEnemy(enemies[i]);
+				stage.removeChild(enemies[i]);
+				enemies.splice(i,1);
+			}
+			else enemyPattern1(enemies[i]);
+		}
+	}
+	//-------------------------------------------------------
+	function updateRockets(){
+		for(var i=0; i<activeRockets.length;i++){
+			activeRockets[i].position.y -= 2.5;
+			//Check for out of bounds
+			if(!between(activeRockets[i].position.y,590,0)){
+				stage.removeChild(activeRockets[i]);
+				activeRockets.splice(i,1);
+			}
+			else if(rocketOriginalPos - activeRockets[i].position.y > 200){
+				for(var j=0; j<enemies.length;j++){
+					killEnemy(enemies[j]);
+					stage.removeChild(enemies[j]);
+				}
+				enemies = [];
+				startExplode(activeRockets[i]);
+				stage.removeChild(activeRockets[i]);
+				activeRockets.splice(i,1);
+				rocketOriginalPos.splice(i,1);
+			}
+		}
+	}
+	//-------------------------------------------------------
+	function updateCoins(){
+		for(var i=0;i<coins.length;i++){
+			if(checkCollision(jet,coins[i])){
+				updateMoney();
+				stage.removeChild(coins[i]);
+				coins.splice(i,1);
+			}
+			else{
+				coins[i].position.y += 2;
+				if(coins[i].position >= renderer.height){
+					stage.removeChild(coins[i]);
+					coins.splice(i,1);
+				}
+			}
+		}
+	}
+	//-------------------------------------------------------
+	function updateItems(){
+		for(var i=0;i<items.length;i++){
+			if(checkCollision(jet,items[i].item)){
+				playerItem = items[i].id;
+				if(playerItem == 2){
+					hasLaser = true;
+					laserOn();
+				}
+				else if(playerItem == 0 && hasLaser){
+					hasLaser = false;
+					laserOff();
+				}
+				stage.removeChild(items[i].item);
+				items.splice(i,1);
+			}
+			else{
+				items[i].item.position.y += 2;
+				if(items[i].item.position >= renderer.height){
+					stage.removeChild(items[i].item);
+					items.splice(i,1);
+				}
+			}
+		}
+	}
+	//-------------------------------------------------------
+	function updateMoney(){
+		//money++;
+		
+	}
+	//-------------------------------------------------------
+	function updateScore(){
+		score++;
+		scoreHolder.innerHTML = "Score: " + score ;
+	}
+	//-------------------------------------------------------
+	function dropCoins(enemy){
+		if(Math.random() > 0.75){
+			var coin = new PIXI.Sprite(coinTexture);
+			coin.scale.x = 0.5;
+			coin.scale.y = 0.5
+			coin.anchor.x = .5;
+			coin.anchor.y = 0.5;
+			coin.position.x = enemy.position.x;
+			coin.position.y = enemy.position.y;
+			stage.addChild(coin);
+			coins.push(coin);
+		}
+	}
+	//-------------------------------------------------------
+	function dropItem(enemy){
+		if(Math.random() > .975){
+			var item = new Item();
+			item.item.anchor.x = 0.5;
+			item.item.anchor.y = 0.5;
+			item.item.position.x = enemy.position.x;
+			item.item.position.y = enemy.position.y;
+			stage.addChild(item.item);
+			items.push(item);
+		}
+	}
+	//-------------------------------------------------------
+	function killEnemy(enemy){
+		updateScore();
+		dropCoins(enemy);
+		dropItem(enemy);
+		startExplode(enemy);
+	}
+	//-------------------------------------------------------
+	function startExplode (explodee)
+	{
+		var explosion = new PIXI.MovieClip(explosionTextures);
+		explosion.currentFrame = 1;
+		explosion.position.x = explodee.position.x;
+		explosion.position.y = explodee.position.y;
+		explosion.anchor.x = explodee.anchor.x;
+		explosion.anchor.y = explodee.anchor.y;
+		explosion.play();
+		stage.addChild(explosion);
+		window.setTimeout(function(){
+			explosion.stop();
+			stage.removeChild(explosion);
+		},400);
+		if(!Mute) ExplSnd.play();
+	}
+	//-------------------------------------------------------
+	var SoundBtn;
+	var SoundBtnOn;
+	var SoundBtnOff;
+
+	var PauseBtn;
+	var ExitBtn;
+
+	var Mute = false;
+	var Pause = false;
+
+	function InitButtons ()
+	{
+		SoundBtnOn = new PIXI.Texture.fromFrame("SoundOn.png");
+		SoundBtnOff = new PIXI.Texture.fromFrame("SoundOff.png");
+		SoundBtn = new PIXI.Sprite(SoundBtnOn);
+
+		var PauseBtnTex = new PIXI.Texture.fromFrame("Pause.png");
+		var ExitBtnTex = new PIXI.Texture.fromFrame("_ExitBtn.png");;
+		PauseBtn = new PIXI.Sprite(PauseBtnTex);
+		ExitBtn = new PIXI.Sprite(ExitBtnTex);
+
+		SoundBtn.setInteractive(true);
+		ExitBtn.setInteractive(true);
+		PauseBtn.setInteractive(true);
+	}
+	//-------------------------------------------------------
+	function gameSettings ()
+	{
+		ExitBtn.position.x = renderer.width - ExitBtn.width;
+		ExitBtn.position.y = 0.5 * ExitBtn.height;
+		ExitBtn.anchor.x = 0.5;
+		ExitBtn.anchor.y = 0.5;
+		stage.addChild(ExitBtn);
+
+		SoundBtn.position.x = renderer.width - SoundBtn.width;
+		SoundBtn.position.y = SoundBtn.height + ExitBtn.height;
+		SoundBtn.anchor.x = 0.5;
+		SoundBtn.anchor.y = 0.5;
+		stage.addChild(SoundBtn);
+
+		// set the mousedown and touchstart callback..
+		ExitBtn.mousedown = function(data){
+			this.alpha = 1;
+			GameMode = 0;
+
+			//Draw Over The Level Here
+
+			stage.removeChild(ExitBtn);
+			stage.removeChild(SoundButton);
+		}
+
+		// set the mousedown and touchstart callback..
+		SoundBtn.mousedown = function(data){
+			//Mute Sound and Change Button Texture
+			if(!Mute){this.setTexture(SoundOff);Mute = true;bgm.pause();}else{this.setTexture(SoundOn);Mute = false;bgm.play();}
+			this.alpha = 1;
+		}
+
+		// set the mousedown and touchstart callback..
+		PauseBtn.mousedown = function(data){
+			this.alpha = 1;
+			// Pause Game
+			Pause = true;
+		}
+	}
+	//-------------------------------------------------------
+	var Espeed_y = 3;
+	var Espeed_x = 1;
+	var currTime = 0;
+	var lastTime = 0;
+	var shootDelay = Math.random() * (500 - 200) + 100;
+	var Emov_right = false;
+	var Emov_left = false;
+	
+	function enemyPattern1 (Enemy)
+	{
+			 if ( Emov_right )
+			 {
+				Enemy.position.x += Espeed_x;
+				window.setTimeout("Enemy_Left ()",  1000);
+			 }
+			 else if ( Emov_left )
+			 {
+				Enemy.position.x -= Espeed_x;
+				window.setTimeout("Enemy_Right ()", 1000);
+			 }
+			Enemy.position.y += Espeed_y;
+			if((currTime - lastTime) * currLevel >= shootDelay){
+				enemyFire(Enemy);
+				lastTime = currTime;
+			}
+	}
+	//-------------------------------------------------------
+	function enemyRight()
+	{
+		Emov_right = true;
+		Emov_left = false;
+	}
+	//-------------------------------------------------------	
+	function enemyLeft()
+	{
+		Emov_right = false;
+		Emov_left = true;
+	}
+	//-------------------------------------------------------
+	function tick(){
+		currTime++;
+	}
+	//-------------------------------------------------------	
+	function between(a,b,c){
+		return ((a>=b && a<=c) || (a<=b && a>=c))? true : false;
+	}
+
+	</script>
+
+	</body>
+</html>

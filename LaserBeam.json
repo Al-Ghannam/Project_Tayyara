@@ -1,0 +1,268 @@
+{"frames": {
+
+"Laser0.png":
+{
+	"frame": {"x":2,"y":1762,"w":32,"h":64},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":526,"w":32,"h":64},
+	"sourceSize": {"w":32,"h":590}
+},
+"Laser1.png":
+{
+	"frame": {"x":410,"y":594,"w":32,"h":552},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":38,"w":32,"h":552},
+	"sourceSize": {"w":32,"h":590}
+},
+"Laser10.png":
+{
+	"frame": {"x":376,"y":594,"w":32,"h":552},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":38,"w":32,"h":552},
+	"sourceSize": {"w":32,"h":590}
+},
+"Laser11.png":
+{
+	"frame": {"x":342,"y":594,"w":32,"h":552},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":38,"w":32,"h":552},
+	"sourceSize": {"w":32,"h":590}
+},
+"Laser12.png":
+{
+	"frame": {"x":308,"y":594,"w":32,"h":552},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":38,"w":32,"h":552},
+	"sourceSize": {"w":32,"h":590}
+},
+"Laser13.png":
+{
+	"frame": {"x":274,"y":594,"w":32,"h":552},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":38,"w":32,"h":552},
+	"sourceSize": {"w":32,"h":590}
+},
+"Laser14.png":
+{
+	"frame": {"x":240,"y":594,"w":32,"h":552},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":38,"w":32,"h":552},
+	"sourceSize": {"w":32,"h":590}
+},
+"Laser15.png":
+{
+	"frame": {"x":2,"y":1184,"w":32,"h":576},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":14,"w":32,"h":576},
+	"sourceSize": {"w":32,"h":590}
+},
+"Laser16.png":
+{
+	"frame": {"x":478,"y":2,"w":32,"h":590},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":590},
+	"sourceSize": {"w":32,"h":590}
+},
+"Laser17.png":
+{
+	"frame": {"x":444,"y":2,"w":32,"h":590},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":590},
+	"sourceSize": {"w":32,"h":590}
+},
+"Laser18.png":
+{
+	"frame": {"x":410,"y":2,"w":32,"h":590},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":590},
+	"sourceSize": {"w":32,"h":590}
+},
+"Laser19.png":
+{
+	"frame": {"x":376,"y":2,"w":32,"h":590},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":590},
+	"sourceSize": {"w":32,"h":590}
+},
+"Laser2.png":
+{
+	"frame": {"x":206,"y":594,"w":32,"h":552},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":38,"w":32,"h":552},
+	"sourceSize": {"w":32,"h":590}
+},
+"Laser20.png":
+{
+	"frame": {"x":342,"y":2,"w":32,"h":590},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":590},
+	"sourceSize": {"w":32,"h":590}
+},
+"Laser21.png":
+{
+	"frame": {"x":308,"y":2,"w":32,"h":590},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":590},
+	"sourceSize": {"w":32,"h":590}
+},
+"Laser22.png":
+{
+	"frame": {"x":274,"y":2,"w":32,"h":590},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":590},
+	"sourceSize": {"w":32,"h":590}
+},
+"Laser23.png":
+{
+	"frame": {"x":2,"y":594,"w":32,"h":588},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":2,"w":32,"h":588},
+	"sourceSize": {"w":32,"h":590}
+},
+"Laser24.png":
+{
+	"frame": {"x":240,"y":2,"w":32,"h":590},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":590},
+	"sourceSize": {"w":32,"h":590}
+},
+"Laser25.png":
+{
+	"frame": {"x":206,"y":2,"w":32,"h":590},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":590},
+	"sourceSize": {"w":32,"h":590}
+},
+"Laser26.png":
+{
+	"frame": {"x":172,"y":2,"w":32,"h":590},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":590},
+	"sourceSize": {"w":32,"h":590}
+},
+"Laser27.png":
+{
+	"frame": {"x":138,"y":2,"w":32,"h":590},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":590},
+	"sourceSize": {"w":32,"h":590}
+},
+"Laser28.png":
+{
+	"frame": {"x":104,"y":2,"w":32,"h":590},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":590},
+	"sourceSize": {"w":32,"h":590}
+},
+"Laser29.png":
+{
+	"frame": {"x":70,"y":2,"w":32,"h":590},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":590},
+	"sourceSize": {"w":32,"h":590}
+},
+"Laser3.png":
+{
+	"frame": {"x":172,"y":594,"w":32,"h":552},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":38,"w":32,"h":552},
+	"sourceSize": {"w":32,"h":590}
+},
+"Laser30.png":
+{
+	"frame": {"x":36,"y":2,"w":32,"h":590},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":590},
+	"sourceSize": {"w":32,"h":590}
+},
+"Laser31.png":
+{
+	"frame": {"x":2,"y":2,"w":32,"h":590},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":32,"h":590},
+	"sourceSize": {"w":32,"h":590}
+},
+"Laser4.png":
+{
+	"frame": {"x":138,"y":594,"w":32,"h":552},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":38,"w":32,"h":552},
+	"sourceSize": {"w":32,"h":590}
+},
+"Laser5.png":
+{
+	"frame": {"x":104,"y":594,"w":32,"h":552},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":38,"w":32,"h":552},
+	"sourceSize": {"w":32,"h":590}
+},
+"Laser6.png":
+{
+	"frame": {"x":70,"y":1148,"w":32,"h":552},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":38,"w":32,"h":552},
+	"sourceSize": {"w":32,"h":590}
+},
+"Laser7.png":
+{
+	"frame": {"x":70,"y":594,"w":32,"h":552},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":38,"w":32,"h":552},
+	"sourceSize": {"w":32,"h":590}
+},
+"Laser8.png":
+{
+	"frame": {"x":36,"y":1148,"w":32,"h":552},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":38,"w":32,"h":552},
+	"sourceSize": {"w":32,"h":590}
+},
+"Laser9.png":
+{
+	"frame": {"x":36,"y":594,"w":32,"h":552},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":38,"w":32,"h":552},
+	"sourceSize": {"w":32,"h":590}
+}},
+"meta": {
+	"app": "http://www.texturepacker.com",
+	"version": "1.0",
+	"image": "LaserBeam.png",
+	"format": "RGBA8888",
+	"size": {"w":512,"h":2048},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:c95bf17528e3930dd6601bcb4645721c$"
+}
+}

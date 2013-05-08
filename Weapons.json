@@ -1,0 +1,68 @@
+{"frames": {
+
+"Missile.png":
+{
+	"frame": {"x":2,"y":33,"w":24,"h":24},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":24,"h":24},
+	"sourceSize": {"w":24,"h":24}
+},
+"bulletEnemy.png":
+{
+	"frame": {"x":44,"y":2,"w":12,"h":24},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":12,"h":24},
+	"sourceSize": {"w":12,"h":24}
+},
+"bulletEnemy2.png":
+{
+	"frame": {"x":2,"y":2,"w":26,"h":29},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":26,"h":29},
+	"sourceSize": {"w":26,"h":29}
+},
+"bulletJet.png":
+{
+	"frame": {"x":30,"y":2,"w":12,"h":24},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":12,"h":24},
+	"sourceSize": {"w":12,"h":24}
+},
+"bulletJet2.png":
+{
+	"frame": {"x":28,"y":33,"w":24,"h":21},
+	"rotated": true,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":24,"h":21},
+	"sourceSize": {"w":24,"h":21}
+},
+"bulletJet3.png":
+{
+	"frame": {"x":51,"y":28,"w":6,"h":24},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":6,"h":24},
+	"sourceSize": {"w":6,"h":24}
+},
+"bulletJet4.png":
+{
+	"frame": {"x":58,"y":2,"w":4,"h":24},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":4,"h":24},
+	"sourceSize": {"w":4,"h":24}
+}},
+"meta": {
+	"app": "http://www.texturepacker.com",
+	"version": "1.0",
+	"image": "Weapons.png",
+	"format": "RGBA8888",
+	"size": {"w":64,"h":64},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:d528463aa043a706d5b69ac441d983e8$"
+}
+}

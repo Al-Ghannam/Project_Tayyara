@@ -1,0 +1,17 @@
+canvas {
+    padding-left: 0;
+    padding-right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+    
+}
+#score {
+text-align:center;
+font-family: 'Arial Black', sans-serif;
+line-height: 1em;
+color: #024d23;
+font-weight:bold;
+font-size: 41px;
+text-shadow:0px 0px 0 rgb(-71,4,-38),1px 1px 0 rgb(-133,-58,-100),2px 2px 0 rgb(-196,-121,-163),3px 3px 0 rgb(-259,-184,-226), 4px 4px 0 rgb(-322,-247,-289),5px 5px 4px rgba(0,0,0,0.5),5px 5px 1px rgba(0,0,0,0.5),0px 0px 4px rgba(0,0,0,.2);
+}

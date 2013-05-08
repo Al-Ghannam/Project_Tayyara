@@ -1,0 +1,36 @@
+{"frames": {
+
+"MenuBG.png":
+{
+	"frame": {"x":2,"y":2,"w":634,"h":590},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":634,"h":590},
+	"sourceSize": {"w":634,"h":590}
+},
+"PlayBtn.png":
+{
+	"frame": {"x":800,"y":2,"w":160,"h":153},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":160,"h":153},
+	"sourceSize": {"w":160,"h":153}
+},
+"PlayBtnGlow.png":
+{
+	"frame": {"x":638,"y":2,"w":160,"h":153},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":160,"h":153},
+	"sourceSize": {"w":160,"h":153}
+}},
+"meta": {
+	"app": "http://www.texturepacker.com",
+	"version": "1.0",
+	"image": "GameMenu.png",
+	"format": "RGBA8888",
+	"size": {"w":1024,"h":1024},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:8862e6b93f35c2e8937676f1b889fa2c$"
+}
+}
